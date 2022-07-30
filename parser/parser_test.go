@@ -320,3 +320,10 @@ func (suite *ParserTestSuite) Test_Parse_DoesNotExist() {
 	_, diags := Parse(path.Join(suite.fixtureDirectory, fixtureFileDoesntExist))
 	suite.NotNilf(diags, "Diagnostics should not be nil")
 }
+
+func (suite *ParserTestSuite) Test_Parse_SingleFile() {
+	terraform, diags := Parse(path.Join(suite.terraformFixtureDirectory, fixtureFileTerraformCombined))
+	suite.NotNilf(terraform.Variables, "Terraform variables should not be nil")
+	suite.NotNilf(terraform.Outputs, "Terraform outputs should not be nil")
+	suite.Nilf(diags, "Diagnostics should be nil")
+}
