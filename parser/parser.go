@@ -14,7 +14,11 @@
 
 package parser
 
-import "github.com/hashicorp/hcl/v2"
+import (
+	"strings"
+
+	"github.com/hashicorp/hcl/v2"
+)
 
 const (
 	// DiagIgnoreUnsupportedBlock collects the error message given when an unknown block type is scanned
@@ -60,4 +64,17 @@ type Output struct {
 type Terraform struct {
 	Variables []*Variable
 	Outputs   []*Output
+}
+
+func checkDiagnostics(diags hcl.Diagnostics, allowedErrors []string) (diagErrors hcl.Diagnostics) {
+	if diags.HasErrors() {
+		for _, diag := range diags {
+			for _, allowedError := range allowedErrors {
+				if !strings.Contains(strings.ToLower(diag.Error()), allowedError) {
+					diagErrors = append(diagErrors, diag)
+				}
+			}
+		}
+	}
+	return diagErrors
 }
