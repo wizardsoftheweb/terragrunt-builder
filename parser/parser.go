@@ -67,6 +67,9 @@ type Terraform struct {
 }
 
 func checkDiagnostics(diags hcl.Diagnostics, allowedErrors []string) (diagErrors hcl.Diagnostics) {
+	if 0 == len(allowedErrors) {
+		return diags
+	}
 	if diags.HasErrors() {
 		for _, diag := range diags {
 			for _, allowedError := range allowedErrors {
