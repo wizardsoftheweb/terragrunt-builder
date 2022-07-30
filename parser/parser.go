@@ -227,10 +227,8 @@ func Parse(filePath string) (Terraform, error) {
 		return terraform, statErr
 	}
 	if fileInfo.IsDir() {
-		files, dirErr := ioutil.ReadDir(filePath)
-		if nil != dirErr {
-			return terraform, dirErr
-		}
+		// We know we're dealing with a directory, so we'll just iterate over the files in it
+		files, _ := ioutil.ReadDir(filePath)
 		for _, file := range files {
 			if strings.HasSuffix(file.Name(), ".tf") {
 				childPath := path.Join(filePath, file.Name())
