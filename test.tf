@@ -6,9 +6,8 @@ variable "image_id" {
 }
 
 variable "other_id" {
-  type        = string
-  description = "The id of the machine image (AMI) to use for the server."
-  sensitive   = true
+  type      = string
+  sensitive = true
 }
 
 output "random_output" {
