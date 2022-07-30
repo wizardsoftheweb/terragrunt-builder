@@ -291,3 +291,20 @@ func (suite *ParserTestSuite) Test_processFile_FileDoesNotExist() {
 	suite.Nilf(terraform.Outputs, "Terraform outputs should be nil")
 	suite.NotNilf(diags, "Diagnostics should not be nil")
 }
+
+func (suite *ParserTestSuite) Test_processFile_SchemaFails() {
+	oldSchema := importantBlocksSchema
+	defer (func() { importantBlocksSchema = oldSchema })()
+	importantBlocksSchema = &hcl.BodySchema{
+		Attributes: []hcl.AttributeSchema{
+			{
+				Name:     "missing",
+				Required: true,
+			},
+		},
+	}
+	terraform, diags := processFile(path.Join(suite.terraformFixtureDirectory, fixtureFileTerraformCombined))
+	suite.Nilf(terraform.Variables, "Terraform variables should be nil")
+	suite.Nilf(terraform.Outputs, "Terraform outputs should be nil")
+	suite.NotNilf(diags, "Diagnostics should not be nil")
+}
