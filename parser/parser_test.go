@@ -24,6 +24,10 @@ import (
 )
 
 const (
+	// fixtureDirectory is the directory containing the fixtures
+	fixtureDirectory = "test_fixtures"
+	// fixtureDirectoryTerraform is the directory with only Terraform files
+	fixtureDirectoryTerraform = "terraform"
 	// fixtureFileHclWontParse is a file that will not parse because of a syntax error
 	fixtureFileHclWontParse = "hcl_wont_parse.hcl"
 	// fixtureFileDoesntExist is a file that does not exist (do not create it!)
@@ -34,11 +38,13 @@ const (
 
 type ParserTestSuite struct {
 	suite.Suite
-	fixtureDirectory string
+	fixtureDirectory          string
+	terraformFixtureDirectory string
 }
 
 func (suite *ParserTestSuite) SetupSuite() {
-	suite.fixtureDirectory = path.Join(".", "test_fixtures")
+	suite.fixtureDirectory = path.Join(".", fixtureDirectory)
+	suite.terraformFixtureDirectory = path.Join(".", fixtureDirectory, fixtureDirectoryTerraform)
 }
 
 func TestParserTestSuite(t *testing.T) {
@@ -139,4 +145,8 @@ func (suite *ParserTestSuite) Test_processSchema_SchemaWithoutErrors() {
 	body, diags := processSchema(rawHcl, &hcl.BodySchema{})
 	suite.NotNilf(body, "Body should not be nil")
 	suite.Nilf(diags, "Diagnostics should be nil")
+}
+
+func (suite *ParserTestSuite) Test_processVariables_OnlyVariables() {
+
 }
