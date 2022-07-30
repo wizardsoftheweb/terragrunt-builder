@@ -4,5 +4,10 @@ variable "one" {
 }
 
 variable "two" {
-  type = string
+  type    = number
+  default = 2
+}
+
+variable "three" {
+  type = bool
 }
