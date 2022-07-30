@@ -15,6 +15,7 @@
 package parser
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/hashicorp/hcl/v2"
@@ -73,7 +74,8 @@ func checkDiagnostics(diags hcl.Diagnostics, allowedErrors []string) (diagErrors
 	if diags.HasErrors() {
 		for _, diag := range diags {
 			for _, allowedError := range allowedErrors {
-				if !strings.Contains(strings.ToLower(diag.Error()), allowedError) {
+				if !strings.Contains(strings.ToLower(diag.Error()), strings.ToLower(allowedError)) {
+					fmt.Println(diag.Error())
 					diagErrors = append(diagErrors, diag)
 				}
 			}
