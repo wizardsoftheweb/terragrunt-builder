@@ -180,3 +180,21 @@ func (suite *ParserTestSuite) Test_processVariables_OnlyVariables() {
 	suite.NotNilf(variable, "Variable should not be nil")
 	suite.Nilf(diags, "Diagnostics should be nil")
 }
+
+func (suite *ParserTestSuite) Test_processVariables_VariableSchemaFails() {
+	oldVariableBlockSchema := variableBlockSchema
+	defer (func() { variableBlockSchema = oldVariableBlockSchema })()
+	variableBlockSchema = &hcl.BodySchema{
+		Attributes: []hcl.AttributeSchema{
+			{
+				Name:     "missing",
+				Required: true,
+			},
+		},
+	}
+	rawHcl, _ := loadFile(path.Join(suite.terraformFixtureDirectory, fixtureFileTerraformOnlyVariables))
+	body, _ := processSchema(rawHcl, importantBlocksSchema)
+	variable, diags := processVariable(body.Blocks[0])
+	suite.Nilf(variable, "Variable should be nil")
+	suite.NotNilf(diags, "Diagnostics should not be nil")
+}
