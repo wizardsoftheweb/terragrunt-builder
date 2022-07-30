@@ -83,7 +83,7 @@ func configFromFile(filePath string) *Config {
 	if diags.HasErrors() {
 		for _, diagErr := range diags.Errs() {
 			if !strings.Contains(strings.ToLower(diagErr.Error()), "unsupported block type") {
-				log.Printf("%+v", diagErr)
+				log.Fatal(diagErr)
 			}
 		}
 	}
@@ -99,7 +99,7 @@ func configFromFile(filePath string) *Config {
 		if diags.HasErrors() {
 			for _, diagErr := range diags.Errs() {
 				if !strings.Contains(strings.ToLower(diagErr.Error()), "unsupported argument") {
-					log.Printf("%+v", diagErr)
+					log.Fatal(diagErr)
 				}
 			}
 		}
