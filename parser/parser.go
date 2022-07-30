@@ -218,18 +218,21 @@ func processFile(filePath string) (Terraform, error) {
 		return terraform, diagErrs
 	}
 	terraform, diagErrs = processTerraform(body)
-	return terraform, diagErrs
+	if diagErrs.HasErrors() {
+		return Terraform{}, diagErrs
+	}
+	return terraform, nil
 }
 
 func Parse(filePath string) (Terraform, error) {
-	terraform := Terraform{}
 	fileInfo, statErr := os.Stat(filePath)
 	if nil != statErr {
-		return terraform, statErr
+		return Terraform{}, statErr
 	}
 	if fileInfo.IsDir() {
 		// We know we're dealing with a directory, so we'll just iterate over the files in it
 		files, _ := ioutil.ReadDir(filePath)
+		terraform := Terraform{}
 		noTerraform := true
 		for _, file := range files {
 			if strings.HasSuffix(file.Name(), ".tf") {
@@ -244,7 +247,7 @@ func Parse(filePath string) (Terraform, error) {
 			}
 		}
 		if noTerraform {
-			return terraform, fmt.Errorf("No Terraform files found in directory %s", filePath)
+			return Terraform{}, fmt.Errorf("no Terraform files found in directory %s", filePath)
 		}
 		return terraform, nil
 	}

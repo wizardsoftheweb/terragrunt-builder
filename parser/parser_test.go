@@ -334,3 +334,12 @@ func (suite *ParserTestSuite) Test_Parse_DirectoryWithoutTerraform() {
 	suite.Nilf(terraform.Outputs, "Terraform outputs should be nil")
 	suite.NotNilf(diags, "Diagnostics should not be nil")
 }
+
+func (suite *ParserTestSuite) Test_Parse_DirectorySuccess() {
+	terraform, diags := Parse(suite.terraformFixtureDirectory)
+	suite.NotNilf(terraform.Variables, "Terraform variables should not be nil")
+	suite.Greaterf(len(terraform.Variables), 1, "There should be several variables")
+	suite.NotNilf(terraform.Outputs, "Terraform outputs should not be nil")
+	suite.Greaterf(len(terraform.Outputs), 1, "There should be several outputs")
+	suite.Nilf(diags, "Diagnostics should be nil")
+}
