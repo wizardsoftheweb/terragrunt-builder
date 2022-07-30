@@ -136,6 +136,7 @@ func processSchema(rawHcl *hcl.File, schema *hcl.BodySchema) (*hcl.BodyContent, 
 	return blocks, nil
 }
 
+// processVariable turns a variable block into a variable struct
 func processVariable(block *hcl.Block) (variable *Variable, diagErr hcl.Diagnostics) {
 	if "variable" != block.Type {
 		return nil, nil
@@ -158,6 +159,7 @@ func processVariable(block *hcl.Block) (variable *Variable, diagErr hcl.Diagnost
 	return variable, nil
 }
 
+// processOutput turns an output block into an output struct
 func processOutput(block *hcl.Block) (output *Output, diagErr hcl.Diagnostics) {
 	if "output" != block.Type {
 		return nil, nil
