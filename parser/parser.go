@@ -15,6 +15,7 @@
 package parser
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -112,4 +113,11 @@ func processSchema(rawHcl *hcl.File, schema *hcl.BodySchema) (*hcl.BodyContent, 
 		return nil, diagErrs
 	}
 	return blocks, nil
+}
+
+func processVariables(body *hcl.BodyContent) (variables []*Variable, diagErrors hcl.Diagnostics) {
+	for _, block := range body.Blocks {
+		fmt.Printf("%+v\n", block)
+	}
+	return nil, nil
 }
