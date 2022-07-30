@@ -15,7 +15,9 @@
 package parser
 
 import (
+	"io/ioutil"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/hashicorp/hcl/v2/gohcl"
@@ -216,4 +218,31 @@ func processFile(filePath string) (Terraform, error) {
 	}
 	terraform, diagErrs = processTerraform(body)
 	return terraform, diagErrs
+}
+
+func Parse(filePath string) (Terraform, error) {
+	terraform := Terraform{}
+	fileInfo, statErr := os.Stat(filePath)
+	if nil != statErr {
+		return terraform, statErr
+	}
+	if fileInfo.IsDir() {
+		files, dirErr := ioutil.ReadDir(filePath)
+		if nil != dirErr {
+			return terraform, dirErr
+		}
+		for _, file := range files {
+			if strings.HasSuffix(file.Name(), ".tf") {
+				childPath := path.Join(filePath, file.Name())
+				childTerraform, childProcessErr := processFile(childPath)
+				if nil != childProcessErr {
+					return Terraform{}, childProcessErr
+				}
+				terraform.Variables = append(terraform.Variables, childTerraform.Variables...)
+				terraform.Outputs = append(terraform.Outputs, childTerraform.Outputs...)
+			}
+		}
+		return terraform, nil
+	}
+	return processFile(filePath)
 }
