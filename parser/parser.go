@@ -15,6 +15,7 @@
 package parser
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -229,8 +230,10 @@ func Parse(filePath string) (Terraform, error) {
 	if fileInfo.IsDir() {
 		// We know we're dealing with a directory, so we'll just iterate over the files in it
 		files, _ := ioutil.ReadDir(filePath)
+		noTerraform := true
 		for _, file := range files {
 			if strings.HasSuffix(file.Name(), ".tf") {
+				noTerraform = false
 				childPath := path.Join(filePath, file.Name())
 				childTerraform, childProcessErr := processFile(childPath)
 				if nil != childProcessErr {
@@ -239,6 +242,9 @@ func Parse(filePath string) (Terraform, error) {
 				terraform.Variables = append(terraform.Variables, childTerraform.Variables...)
 				terraform.Outputs = append(terraform.Outputs, childTerraform.Outputs...)
 			}
+		}
+		if noTerraform {
+			return terraform, fmt.Errorf("No Terraform files found in directory %s", filePath)
 		}
 		return terraform, nil
 	}

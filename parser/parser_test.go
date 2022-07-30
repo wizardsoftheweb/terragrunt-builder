@@ -327,3 +327,10 @@ func (suite *ParserTestSuite) Test_Parse_SingleFile() {
 	suite.NotNilf(terraform.Outputs, "Terraform outputs should not be nil")
 	suite.Nilf(diags, "Diagnostics should be nil")
 }
+
+func (suite *ParserTestSuite) Test_Parse_DirectoryWithoutTerraform() {
+	terraform, diags := Parse(".")
+	suite.Nilf(terraform.Variables, "Terraform variables should be nil")
+	suite.Nilf(terraform.Outputs, "Terraform outputs should be nil")
+	suite.NotNilf(diags, "Diagnostics should not be nil")
+}
