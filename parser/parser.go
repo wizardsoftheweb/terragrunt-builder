@@ -55,21 +55,27 @@ const (
 //	}
 //)
 
+// Variable holds values that may be used for Terragrunt inputs
 type Variable struct {
 	Name    string
 	Default interface{}
 }
 
+// Output holds values that may be used for Terragrunt dependencies
 type Output struct {
 	Name  string
 	Value interface{}
 }
 
+// Terraform holds the blocks from TF files we're interested in working with
 type Terraform struct {
 	Variables []*Variable
 	Outputs   []*Output
 }
 
+// checkDiagnostics is a simple helper function to ignore diagnostic errors we may not care about. For example, if we're
+// parsing for variables, we may only pass in a schema that contains variables and their structure. Things like
+// resources and outputs would trigger a diagnostic error.
 func checkDiagnostics(diags hcl.Diagnostics, allowedErrors []string) (diagErrors hcl.Diagnostics) {
 	if 0 == len(allowedErrors) {
 		return diags
@@ -87,6 +93,7 @@ func checkDiagnostics(diags hcl.Diagnostics, allowedErrors []string) (diagErrors
 	return diagErrors
 }
 
+// loadFile reads the file and parses it into a raw HCL format, ready for unmarshalling
 func loadFile(filePath string) (rawHcl *hcl.File, err error) {
 	fileContents, fileReadErr := os.ReadFile(filePath)
 	if fileReadErr != nil {
