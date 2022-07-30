@@ -9,3 +9,7 @@ variable "other_id" {
   description = "The id of the machine image (AMI) to use for the server."
   sensitive   = true
 }
+
+output "random_output" {
+  value = "1"
+}
