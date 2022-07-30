@@ -36,6 +36,8 @@ const (
 	fixtureFileParseableHcl = "parseable_hcl.hcl"
 	// fixtureFileTerraformOnlyVariables is a file containing only variable declarations
 	fixtureFileTerraformOnlyVariables = "only_variables.tf"
+	// fixtureFileTerraformOnlyOutputs is a file containing only variable declarations
+	fixtureFileTerraformOnlyOutputs = "only_outputs.tf"
 )
 
 type ParserTestSuite struct {
@@ -194,4 +196,12 @@ func (suite *ParserTestSuite) Test_processVariables_VariableSchemaFails() {
 	variable, diags := processVariable(body.Blocks[0])
 	suite.Nilf(variable, "Variable should be nil")
 	suite.NotNilf(diags, "Diagnostics should not be nil")
+}
+
+func (suite *ParserTestSuite) Test_processVariables_NotAVariable() {
+	rawHcl, _ := loadFile(path.Join(suite.terraformFixtureDirectory, fixtureFileTerraformOnlyOutputs))
+	body, _ := processSchema(rawHcl, importantBlocksSchema)
+	variable, diags := processVariable(body.Blocks[0])
+	suite.Nilf(variable, "Variable should be nil")
+	suite.Nilf(diags, "Diagnostics should be nil")
 }
