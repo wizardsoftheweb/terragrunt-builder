@@ -17,6 +17,8 @@ package parser
 import (
 	"testing"
 
+	"github.com/hashicorp/hcl/v2"
+
 	"github.com/stretchr/testify/suite"
 )
 
@@ -26,4 +28,16 @@ type ParserTestSuite struct {
 
 func TestParserTestSuite(t *testing.T) {
 	suite.Run(t, new(ParserTestSuite))
+}
+
+func (suite *ParserTestSuite) Test_checkDiagnostics_NoAllowedErrors() {
+	diags := hcl.Diagnostics{
+		{
+			Severity: hcl.DiagError,
+			Summary:  "Not allowed",
+			Detail:   "This is not allowed",
+		},
+	}
+	parsedDiags := checkDiagnostics(diags, nil)
+	suite.Equal(diags, parsedDiags)
 }
