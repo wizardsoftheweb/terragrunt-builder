@@ -105,3 +105,13 @@ func loadFile(filePath string) (rawHcl *hcl.File, err error) {
 	}
 	return rawHcl, nil
 }
+
+// processSchema is a helper function to process the raw HCL format into something that can be walked and parsed
+func processSchema(rawHcl *hcl.File, schema *hcl.BodySchema) (*hcl.BodyContent, hcl.Diagnostics) {
+	blocks, diags := rawHcl.Body.Content(schema)
+	diagErrs := checkDiagnostics(diags, []string{DiagIgnoreUnsupportedBlock})
+	if nil != diagErrs {
+		return nil, diagErrs
+	}
+	return blocks, nil
+}
