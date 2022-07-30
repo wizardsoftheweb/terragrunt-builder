@@ -51,9 +51,9 @@ var (
 	// variableBlockSchema grabs only the attributes we're interested in from the variable block
 	variableBlockSchema = &hcl.BodySchema{
 		Attributes: []hcl.AttributeSchema{
-			//{
-			//	Name: "type",
-			//},
+			{
+				Name: "type",
+			},
 			{
 				Name: "default",
 			},
