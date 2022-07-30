@@ -16,6 +16,13 @@ package parser
 
 import "github.com/hashicorp/hcl/v2"
 
+const (
+	// DiagIgnoreUnsupportedBlock collects the error message given when an unknown block type is scanned
+	DiagIgnoreUnsupportedBlock = "unsupported block"
+	// DiagIgnoreUnsupportedAttribute collects the error message given when an unknown attribute is scanned
+	DiagIgnoreUnsupportedAttribute = "unsupported attribute"
+)
+
 var (
 	// importantBlocksSchema sets up the blocks we're interested in as we parse TF
 	importantBlocksSchema = &hcl.BodySchema{
