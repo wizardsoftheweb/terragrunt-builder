@@ -1,5 +1,8 @@
 # `terragrunt-builder`
 
+![Continuous Integration](https://github.com/wizardsoftheweb/terragrunt-builder/actions/workflows/ci.yaml/badge.svg)
+[![codecov](https://codecov.io/gh/wizardsoftheweb/terragrunt-builder/branch/main/graph/badge.svg?token=1BNSPY1Q5U)](https://codecov.io/gh/wizardsoftheweb/terragrunt-builder)
+
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
