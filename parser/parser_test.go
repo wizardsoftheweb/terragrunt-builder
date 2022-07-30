@@ -15,6 +15,7 @@
 package parser
 
 import (
+	"path"
 	"testing"
 
 	"github.com/hashicorp/hcl/v2"
@@ -24,6 +25,11 @@ import (
 
 type ParserTestSuite struct {
 	suite.Suite
+	fixtureDirectory string
+}
+
+func (suite *ParserTestSuite) SetUpSuite() {
+	suite.fixtureDirectory = path.Join(".", "test_fixtures")
 }
 
 func TestParserTestSuite(t *testing.T) {
