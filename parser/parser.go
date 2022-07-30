@@ -16,7 +16,10 @@ package parser
 
 import (
 	"fmt"
+	"os"
 	"strings"
+
+	"github.com/hashicorp/hcl/v2/hclsyntax"
 
 	"github.com/hashicorp/hcl/v2"
 )
@@ -82,4 +85,16 @@ func checkDiagnostics(diags hcl.Diagnostics, allowedErrors []string) (diagErrors
 		}
 	}
 	return diagErrors
+}
+
+func loadFile(filePath string) (rawHcl *hcl.File, err error) {
+	fileContents, fileReadErr := os.ReadFile(filePath)
+	if fileReadErr != nil {
+		return nil, fileReadErr
+	}
+	rawHcl, hclParseDiags := hclsyntax.ParseConfig(fileContents, filePath, hcl.Pos{Line: 1, Column: 1})
+	if hclParseDiags.HasErrors() {
+		return nil, hclParseDiags
+	}
+	return rawHcl, nil
 }
