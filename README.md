@@ -1,5 +1,8 @@
 # `terragrunt-builder`
 
+![Continuous Integration](https://github.com/wizardsoftheweb/terragrunt-builder/actions/workflows/ci.yaml/badge.svg)
+[![codecov](https://codecov.io/gh/wizardsoftheweb/terragrunt-builder/branch/main/graph/badge.svg?token=1BNSPY1Q5U)](https://codecov.io/gh/wizardsoftheweb/terragrunt-builder)
+
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
@@ -10,6 +13,8 @@
 
 - [Overview](#overview)
 - [References](#references)
+- [TODOs](#todos)
+  - [Parser](#parser)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -20,3 +25,11 @@ I want to see if I can parse TF and build some quick Terragrunt scaffolding.
 ## References
 
 - [Great Stack Overflow answer](https://stackoverflow.com/a/66620345/2877698)
+
+## TODOs
+
+### Parser
+
+- Right now the parser only handles variables whose type is string. It will coerce anything else into a string unless it's something complicated like a list or an object.
+  - <https://github.com/hashicorp/terraform/blob/v1.2.6/internal/configs/named_values.go>
+  - Probably need to understand [`go-cty`](https://github.com/zclconf/go-cty)
