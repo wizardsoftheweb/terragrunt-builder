@@ -97,7 +97,11 @@ func configFromFile(filePath string) *Config {
 
 		blockCont, diags := block.Body.Content(variableBlockSchema)
 		if diags.HasErrors() {
-			log.Fatal("block content", diags)
+			for _, diagErr := range diags.Errs() {
+				if !strings.Contains(strings.ToLower(diagErr.Error()), "unsupported argument") {
+					log.Printf("%+v", diagErr)
+				}
+			}
 		}
 
 		if attr, exists := blockCont.Attributes["description"]; exists {
