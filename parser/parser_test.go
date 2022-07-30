@@ -34,6 +34,8 @@ const (
 	fixtureFileDoesntExist = "doesnt_exist.hcl"
 	// fixtureFileParseableHcl is a file that will parse because it is valid HCL
 	fixtureFileParseableHcl = "parseable_hcl.hcl"
+	// fixtureFileTerraformOnlyVariables is a file containing only variable declarations
+	fixtureFileTerraformOnlyVariables = "only_variables.tf"
 )
 
 type ParserTestSuite struct {
@@ -148,5 +150,9 @@ func (suite *ParserTestSuite) Test_processSchema_SchemaWithoutErrors() {
 }
 
 func (suite *ParserTestSuite) Test_processVariables_OnlyVariables() {
-
+	rawHcl, _ := loadFile(path.Join(suite.terraformFixtureDirectory, fixtureFileTerraformOnlyVariables))
+	body, _ := processSchema(rawHcl, importantBlocksSchema)
+	variables, diags := processVariables(body)
+	suite.NotNilf(variables, "Variables should not be nil")
+	suite.Nilf(diags, "Diagnostics should be nil")
 }

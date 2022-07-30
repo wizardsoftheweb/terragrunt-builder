@@ -31,29 +31,29 @@ const (
 	DiagIgnoreUnsupportedAttribute = "unsupported attribute"
 )
 
-//var (
-//	// importantBlocksSchema sets up the blocks we're interested in as we parse TF
-//	importantBlocksSchema = &hcl.BodySchema{
-//		Blocks: []hcl.BlockHeaderSchema{
-//			{
-//				Type:       "variable",
-//				LabelNames: []string{"name"},
-//			},
-//			{
-//				Type:       "output",
-//				LabelNames: []string{"name"},
-//			},
-//		},
-//	}
-//	// variableBlockSchema grabs only the attributes we're interested in from the variable block
-//	variableBlockSchema = &hcl.BodySchema{
-//		Attributes: []hcl.AttributeSchema{
-//			{
-//				Name: "default",
-//			},
-//		},
-//	}
-//)
+var (
+	// importantBlocksSchema sets up the blocks we're interested in as we parse TF
+	importantBlocksSchema = &hcl.BodySchema{
+		Blocks: []hcl.BlockHeaderSchema{
+			{
+				Type:       "variable",
+				LabelNames: []string{"name"},
+			},
+			{
+				Type:       "output",
+				LabelNames: []string{"name"},
+			},
+		},
+	}
+	//// variableBlockSchema grabs only the attributes we're interested in from the variable block
+	//variableBlockSchema = &hcl.BodySchema{
+	//	Attributes: []hcl.AttributeSchema{
+	//		{
+	//			Name: "default",
+	//		},
+	//	},
+	//}
+)
 
 // Variable holds values that may be used for Terragrunt inputs
 type Variable struct {
