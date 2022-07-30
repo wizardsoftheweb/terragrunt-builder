@@ -41,3 +41,18 @@ func (suite *ParserTestSuite) Test_checkDiagnostics_NoAllowedErrors() {
 	parsedDiags := checkDiagnostics(diags, nil)
 	suite.Equal(diags, parsedDiags)
 }
+
+func (suite *ParserTestSuite) Test_checkDiagnostics_AllAllowedErrors() {
+	diags := hcl.Diagnostics{
+		{
+			Severity: hcl.DiagError,
+			Summary:  "Allowed diagnostic",
+			Detail:   "This is allowed",
+		},
+	}
+	allowedErrors := []string{
+		"Allowed diagnostic",
+	}
+	parsedDiags := checkDiagnostics(diags, allowedErrors)
+	suite.Nilf(parsedDiags, "Diagnostics should be nil")
+}
