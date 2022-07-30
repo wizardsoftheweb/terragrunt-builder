@@ -38,6 +38,8 @@ const (
 	fixtureFileTerraformOnlyVariables = "only_variables.tf"
 	// fixtureFileTerraformOnlyOutputs is a file containing only variable declarations
 	fixtureFileTerraformOnlyOutputs = "only_outputs.tf"
+	// fixtureFileBadTypeDefault is a file containing a variable whose default does not match its type
+	fixtureFileBadTypeDefault = "bad_type_default.tf"
 )
 
 type ParserTestSuite struct {
@@ -204,4 +206,12 @@ func (suite *ParserTestSuite) Test_processVariables_NotAVariable() {
 	variable, diags := processVariable(body.Blocks[0])
 	suite.Nilf(variable, "Variable should be nil")
 	suite.Nilf(diags, "Diagnostics should be nil")
+}
+
+func (suite *ParserTestSuite) Test_processVariables_BadType() {
+	rawHcl, _ := loadFile(path.Join(suite.fixtureDirectory, fixtureFileBadTypeDefault))
+	body, _ := processSchema(rawHcl, importantBlocksSchema)
+	variable, diags := processVariable(body.Blocks[0])
+	suite.Nilf(variable, "Variable should be nil")
+	suite.NotNilf(diags, "Diagnostics should not be nil")
 }

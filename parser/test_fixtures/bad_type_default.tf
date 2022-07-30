@@ -1,4 +1,6 @@
 variable "fails" {
-  type    = string
-  default = true
+  type = string
+  default = {
+    bad = "value"
+  }
 }
