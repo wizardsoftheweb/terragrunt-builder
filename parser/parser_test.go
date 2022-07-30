@@ -360,3 +360,20 @@ func (suite *ParserTestSuite) Test_Parse_DirectorySuccess() {
 	suite.Greaterf(len(terraform.Outputs), 1, "There should be several outputs")
 	suite.Nilf(diags, "Diagnostics should be nil")
 }
+
+func (suite *ParserTestSuite) Test_Parse_DirectoryWithDiagErrors() {
+	oldSchema := variableBlockSchema
+	defer (func() { variableBlockSchema = oldSchema })()
+	variableBlockSchema = &hcl.BodySchema{
+		Attributes: []hcl.AttributeSchema{
+			{
+				Name:     "missing",
+				Required: true,
+			},
+		},
+	}
+	terraform, diags := Parse(suite.terraformFixtureDirectory)
+	suite.Nilf(terraform.Variables, "Terraform variables should be nil")
+	suite.Nilf(terraform.Outputs, "Terraform outputs should be nil")
+	suite.NotNilf(diags, "Diagnostics should not be nil")
+}
