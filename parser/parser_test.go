@@ -119,3 +119,17 @@ func (suite *ParserTestSuite) Test_loadFile_WillParse() {
 	suite.NotNilf(rawHcl, "Raw HCL should not be nil")
 	suite.Nilf(parseErr, "Parse error should be nil")
 }
+
+func (suite *ParserTestSuite) Test_processSchema_SchemaWithErrors() {
+	rawHcl, _ := loadFile(path.Join(suite.fixtureDirectory, fixtureFileParseableHcl))
+	body, diags := processSchema(rawHcl, &hcl.BodySchema{
+		Attributes: []hcl.AttributeSchema{
+			{
+				Name:     "missing",
+				Required: true,
+			},
+		},
+	})
+	suite.Nilf(body, "Body should be nil")
+	suite.NotNilf(diags, "Diagnostics should not be nil")
+}
