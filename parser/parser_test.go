@@ -15,7 +15,6 @@
 package parser
 
 import (
-	"fmt"
 	"path"
 	"testing"
 
@@ -175,8 +174,6 @@ func (suite *ParserTestSuite) Test_processVariables_OnlyVariables() {
 	rawHcl, _ := loadFile(path.Join(suite.terraformFixtureDirectory, fixtureFileTerraformOnlyVariables))
 	body, _ := processSchema(rawHcl, importantBlocksSchema)
 	variable, diags := processVariable(body.Blocks[0])
-	fmt.Printf("%+v\n", variable)
-	fmt.Printf("%+v\n", diags)
 	suite.NotNilf(variable, "Variable should not be nil")
 	suite.Nilf(diags, "Diagnostics should be nil")
 }
