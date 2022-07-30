@@ -24,7 +24,11 @@ import (
 )
 
 const (
+	// fixtureFileHclWontParse is a file that will not parse because of a syntax error
 	fixtureFileHclWontParse = "hcl_wont_parse.hcl"
+	// fixtureFileDoesntExist is a file that does not exist (do not create it!)
+	fixtureFileDoesntExist = "doesnt_exist.hcl"
+	// fixtureFileParseableHcl is a file that will parse because it is valid HCL
 	fixtureFileParseableHcl = "parseable_hcl.hcl"
 )
 
@@ -103,7 +107,7 @@ func (suite *ParserTestSuite) Test_loadFile_WontParse() {
 }
 
 func (suite *ParserTestSuite) Test_loadFile_DoesntExist() {
-	filePath := path.Join(suite.fixtureDirectory, "doesnt_exist.hcl")
+	filePath := path.Join(suite.fixtureDirectory, fixtureFileDoesntExist)
 	rawHcl, parseErr := loadFile(filePath)
 	suite.Nilf(rawHcl, "Raw HCL should be nil")
 	suite.NotNilf(parseErr, "Parse error should not be nil")
