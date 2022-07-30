@@ -23,6 +23,10 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
+const (
+	fixtureFileHclWontParse = "hcl_wont_parse.hcl"
+)
+
 type ParserTestSuite struct {
 	suite.Suite
 	fixtureDirectory string
