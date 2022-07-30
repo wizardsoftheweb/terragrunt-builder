@@ -34,12 +34,14 @@ const (
 	fixtureFileDoesntExist = "doesnt_exist.hcl"
 	// fixtureFileParseableHcl is a file that will parse because it is valid HCL
 	fixtureFileParseableHcl = "parseable_hcl.hcl"
+	// fixtureFileBadTypeDefault is a file containing a variable whose default does not match its type
+	fixtureFileBadTypes = "bad_types.tf"
 	// fixtureFileTerraformOnlyVariables is a file containing only variable declarations
 	fixtureFileTerraformOnlyVariables = "only_variables.tf"
 	// fixtureFileTerraformOnlyOutputs is a file containing only variable declarations
 	fixtureFileTerraformOnlyOutputs = "only_outputs.tf"
-	// fixtureFileBadTypeDefault is a file containing a variable whose default does not match its type
-	fixtureFileBadTypes = "bad_types.tf"
+	// fixtureFileTerraformCombined has both variables and outputs
+	fixtureFileTerraformCombined = "combined.tf"
 )
 
 type ParserTestSuite struct {
@@ -265,4 +267,13 @@ func (suite *ParserTestSuite) Test_processTerraform_BadTypes() {
 	suite.Nilf(terraform.Variables, "Terraform variables should be nil")
 	suite.Nilf(terraform.Outputs, "Terraform outputs should be nil")
 	suite.NotNilf(diags, "Diagnostics should not be nil")
+}
+
+func (suite *ParserTestSuite) Test_processTerraform_Success() {
+	rawHcl, _ := loadFile(path.Join(suite.terraformFixtureDirectory, fixtureFileTerraformCombined))
+	body, _ := processSchema(rawHcl, importantBlocksSchema)
+	terraform, diags := processTerraform(body)
+	suite.NotNilf(terraform.Variables, "Terraform variables should not be nil")
+	suite.NotNilf(terraform.Outputs, "Terraform outputs should not be nil")
+	suite.Nilf(diags, "Diagnostics should be nil")
 }
