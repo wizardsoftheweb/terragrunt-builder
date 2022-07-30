@@ -46,3 +46,18 @@ var (
 		},
 	}
 )
+
+type Variable struct {
+	Name    string
+	Default interface{}
+}
+
+type Output struct {
+	Name  string
+	Value interface{}
+}
+
+type Terraform struct {
+	Variables []*Variable
+	Outputs   []*Output
+}
