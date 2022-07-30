@@ -28,3 +28,5 @@ I want to see if I can parse TF and build some quick Terragrunt scaffolding.
 ### Parser
 
 - Right now the parser only handles variables whose type is string. It will coerce anything else into a string unless it's something complicated like a list or an object.
+  - <https://github.com/hashicorp/terraform/blob/v1.2.6/internal/configs/named_values.go>
+  - Probably need to understand [`go-cty`](https://github.com/zclconf/go-cty)
