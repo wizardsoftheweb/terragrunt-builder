@@ -257,3 +257,12 @@ func (suite *ParserTestSuite) Test_processOutputs_BadType() {
 	suite.Nilf(output, "Output should be nil")
 	suite.NotNilf(diags, "Diagnostics should not be nil")
 }
+
+func (suite *ParserTestSuite) Test_processTerraform_BadTypes() {
+	rawHcl, _ := loadFile(path.Join(suite.fixtureDirectory, fixtureFileBadTypes))
+	body, _ := processSchema(rawHcl, importantBlocksSchema)
+	terraform, diags := processTerraform(body)
+	suite.Nilf(terraform.Variables, "Terraform variables should be nil")
+	suite.Nilf(terraform.Outputs, "Terraform outputs should be nil")
+	suite.NotNilf(diags, "Diagnostics should not be nil")
+}
