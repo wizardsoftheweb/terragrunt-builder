@@ -315,3 +315,8 @@ func (suite *ParserTestSuite) Test_processFile_SchemaFails() {
 	suite.Nilf(terraform.Outputs, "Terraform outputs should be nil")
 	suite.NotNilf(diags, "Diagnostics should not be nil")
 }
+
+func (suite *ParserTestSuite) Test_Parse_DoesNotExist() {
+	_, diags := Parse(path.Join(suite.fixtureDirectory, fixtureFileDoesntExist))
+	suite.NotNilf(diags, "Diagnostics should not be nil")
+}
