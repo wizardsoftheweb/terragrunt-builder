@@ -181,3 +181,25 @@ func processOutput(block *hcl.Block) (output *Output, diagErr hcl.Diagnostics) {
 	}
 	return output, nil
 }
+
+func processTerraform(body *hcl.BodyContent) (terraform Terraform, diagErrs hcl.Diagnostics) {
+	for _, block := range body.Blocks {
+		switch block.Type {
+		case "variable":
+			variable, diagErr := processVariable(block)
+			if nil != diagErr {
+				diagErrs = append(diagErrs, diagErr...)
+				continue
+			}
+			terraform.Variables = append(terraform.Variables, variable)
+		case "output":
+			output, diagErr := processOutput(block)
+			if nil != diagErr {
+				diagErrs = append(diagErrs, diagErr...)
+				continue
+			}
+			terraform.Outputs = append(terraform.Outputs, output)
+		}
+	}
+	return terraform, diagErrs
+}
