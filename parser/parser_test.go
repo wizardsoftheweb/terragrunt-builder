@@ -33,7 +33,7 @@ type ParserTestSuite struct {
 	fixtureDirectory string
 }
 
-func (suite *ParserTestSuite) SetUpSuite() {
+func (suite *ParserTestSuite) SetupSuite() {
 	suite.fixtureDirectory = path.Join(".", "test_fixtures")
 }
 
