@@ -284,3 +284,10 @@ func (suite *ParserTestSuite) Test_processFile_Success() {
 	suite.NotNilf(terraform.Outputs, "Terraform outputs should not be nil")
 	suite.Nilf(diags, "Diagnostics should be nil")
 }
+
+func (suite *ParserTestSuite) Test_processFile_FileDoesNotExist() {
+	terraform, diags := processFile(path.Join(suite.fixtureDirectory, fixtureFileDoesntExist))
+	suite.Nilf(terraform.Variables, "Terraform variables should be nil")
+	suite.Nilf(terraform.Outputs, "Terraform outputs should be nil")
+	suite.NotNilf(diags, "Diagnostics should not be nil")
+}
