@@ -25,6 +25,7 @@ import (
 
 const (
 	fixtureFileHclWontParse = "hcl_wont_parse.hcl"
+	fixtureFileParseableHcl = "parseable_hcl.hcl"
 )
 
 type ParserTestSuite struct {
