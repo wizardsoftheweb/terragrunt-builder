@@ -10,6 +10,8 @@
 
 - [Overview](#overview)
 - [References](#references)
+- [TODOs](#todos)
+  - [Parser](#parser)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -20,3 +22,9 @@ I want to see if I can parse TF and build some quick Terragrunt scaffolding.
 ## References
 
 - [Great Stack Overflow answer](https://stackoverflow.com/a/66620345/2877698)
+
+## TODOs
+
+### Parser
+
+- Right now the parser only handles variables whose type is string. It will coerce anything else into a string unless it's something complicated like a list or an object.
