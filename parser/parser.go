@@ -147,3 +147,25 @@ func processVariable(block *hcl.Block) (variable *Variable, diagErr hcl.Diagnost
 	}
 	return variable, nil
 }
+
+func processOutput(block *hcl.Block) (output *Output, diagErr hcl.Diagnostics) {
+	if "output" != block.Type {
+		return nil, nil
+	}
+	blockContent, diags := block.Body.Content(variableBlockSchema)
+	diagErr = checkDiagnostics(diags, []string{DiagIgnoreUnsupportedAttribute, DiagIgnoreUnsupportedArgument})
+	if nil != diagErr {
+		return nil, diagErr
+	}
+	output = &Output{
+		Name: block.Labels[0],
+	}
+	if valueAttr, ok := blockContent.Attributes["value"]; ok {
+		attributeDiags := gohcl.DecodeExpression(valueAttr.Expr, nil, &output.Value)
+		diagErr = checkDiagnostics(attributeDiags, nil)
+		if nil != attributeDiags {
+			return nil, diagErr
+		}
+	}
+	return output, nil
+}
