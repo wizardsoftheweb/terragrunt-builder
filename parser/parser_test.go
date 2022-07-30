@@ -39,7 +39,7 @@ func (suite *ParserTestSuite) Test_checkDiagnostics_NoAllowedErrors() {
 		},
 	}
 	parsedDiags := checkDiagnostics(diags, nil)
-	suite.Equal(diags, parsedDiags)
+	suite.Equalf(diags, parsedDiags, "Diagnostics should be %v", diags)
 }
 
 func (suite *ParserTestSuite) Test_checkDiagnostics_AllAllowedErrors() {
