@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/gohcl"
@@ -80,7 +81,11 @@ func configFromFile(filePath string) *Config {
 
 	bodyCont, diags := file.Body.Content(configFileSchema)
 	if diags.HasErrors() {
-		log.Fatal("file content", diags)
+		for _, diagErr := range diags.Errs() {
+			if !strings.Contains(strings.ToLower(diagErr.Error()), "unsupported block type") {
+				log.Printf("%+v", diagErr)
+			}
+		}
 	}
 
 	res := &Config{}
