@@ -4,3 +4,10 @@ variable "fails" {
     bad = "value"
   }
 }
+
+output "fails" {
+  type = string
+  value = {
+    bad = "value"
+  }
+}

@@ -59,6 +59,16 @@ var (
 			},
 		},
 	}
+	outputBlockSchema = &hcl.BodySchema{
+		Attributes: []hcl.AttributeSchema{
+			{
+				Name: "type",
+			},
+			{
+				Name: "value",
+			},
+		},
+	}
 )
 
 // Variable holds values that may be used for Terragrunt inputs
@@ -152,7 +162,7 @@ func processOutput(block *hcl.Block) (output *Output, diagErr hcl.Diagnostics) {
 	if "output" != block.Type {
 		return nil, nil
 	}
-	blockContent, diags := block.Body.Content(variableBlockSchema)
+	blockContent, diags := block.Body.Content(outputBlockSchema)
 	diagErr = checkDiagnostics(diags, []string{DiagIgnoreUnsupportedAttribute, DiagIgnoreUnsupportedArgument})
 	if nil != diagErr {
 		return nil, diagErr

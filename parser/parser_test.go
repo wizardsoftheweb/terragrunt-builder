@@ -39,7 +39,7 @@ const (
 	// fixtureFileTerraformOnlyOutputs is a file containing only variable declarations
 	fixtureFileTerraformOnlyOutputs = "only_outputs.tf"
 	// fixtureFileBadTypeDefault is a file containing a variable whose default does not match its type
-	fixtureFileBadTypeDefault = "bad_type_default.tf"
+	fixtureFileBadTypes = "bad_types.tf"
 )
 
 type ParserTestSuite struct {
@@ -209,9 +209,51 @@ func (suite *ParserTestSuite) Test_processVariables_NotAVariable() {
 }
 
 func (suite *ParserTestSuite) Test_processVariables_BadType() {
-	rawHcl, _ := loadFile(path.Join(suite.fixtureDirectory, fixtureFileBadTypeDefault))
+	rawHcl, _ := loadFile(path.Join(suite.fixtureDirectory, fixtureFileBadTypes))
 	body, _ := processSchema(rawHcl, importantBlocksSchema)
 	variable, diags := processVariable(body.Blocks[0])
 	suite.Nilf(variable, "Variable should be nil")
+	suite.NotNilf(diags, "Diagnostics should not be nil")
+}
+
+func (suite *ParserTestSuite) Test_processOutputs_OnlyOutputs() {
+	rawHcl, _ := loadFile(path.Join(suite.terraformFixtureDirectory, fixtureFileTerraformOnlyOutputs))
+	body, _ := processSchema(rawHcl, importantBlocksSchema)
+	output, diags := processOutput(body.Blocks[0])
+	suite.NotNilf(output, "Output should not be nil")
+	suite.Nilf(diags, "Diagnostics should be nil")
+}
+
+func (suite *ParserTestSuite) Test_processOutputs_OutputSchemaFails() {
+	oldOutputBlockSchema := outputBlockSchema
+	defer (func() { outputBlockSchema = oldOutputBlockSchema })()
+	outputBlockSchema = &hcl.BodySchema{
+		Attributes: []hcl.AttributeSchema{
+			{
+				Name:     "missing",
+				Required: true,
+			},
+		},
+	}
+	rawHcl, _ := loadFile(path.Join(suite.terraformFixtureDirectory, fixtureFileTerraformOnlyOutputs))
+	body, _ := processSchema(rawHcl, importantBlocksSchema)
+	output, diags := processOutput(body.Blocks[0])
+	suite.Nilf(output, "Output should be nil")
+	suite.NotNilf(diags, "Diagnostics should not be nil")
+}
+
+func (suite *ParserTestSuite) Test_procesOutputs_NotAnOutput() {
+	rawHcl, _ := loadFile(path.Join(suite.terraformFixtureDirectory, fixtureFileTerraformOnlyVariables))
+	body, _ := processSchema(rawHcl, importantBlocksSchema)
+	output, diags := processOutput(body.Blocks[0])
+	suite.Nilf(output, "Output should be nil")
+	suite.Nilf(diags, "Diagnostics should be nil")
+}
+
+func (suite *ParserTestSuite) Test_processOutputs_BadType() {
+	rawHcl, _ := loadFile(path.Join(suite.fixtureDirectory, fixtureFileBadTypes))
+	body, _ := processSchema(rawHcl, importantBlocksSchema)
+	output, diags := processOutput(body.Blocks[1])
+	suite.Nilf(output, "Output should be nil")
 	suite.NotNilf(diags, "Diagnostics should not be nil")
 }
