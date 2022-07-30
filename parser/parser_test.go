@@ -108,3 +108,10 @@ func (suite *ParserTestSuite) Test_loadFile_DoesntExist() {
 	suite.Nilf(rawHcl, "Raw HCL should be nil")
 	suite.NotNilf(parseErr, "Parse error should not be nil")
 }
+
+func (suite *ParserTestSuite) Test_loadFile_WillParse() {
+	filePath := path.Join(suite.fixtureDirectory, fixtureFileParseableHcl)
+	rawHcl, parseErr := loadFile(filePath)
+	suite.NotNilf(rawHcl, "Raw HCL should not be nil")
+	suite.Nilf(parseErr, "Parse error should be nil")
+}
