@@ -15,7 +15,6 @@
 package parser
 
 import (
-	"fmt"
 	"os"
 	"strings"
 
@@ -84,7 +83,6 @@ func checkDiagnostics(diags hcl.Diagnostics, allowedErrors []string) (diagErrors
 		for _, diag := range diags {
 			for _, allowedError := range allowedErrors {
 				if !strings.Contains(strings.ToLower(diag.Error()), strings.ToLower(allowedError)) {
-					fmt.Println(diag.Error())
 					diagErrors = append(diagErrors, diag)
 				}
 			}
