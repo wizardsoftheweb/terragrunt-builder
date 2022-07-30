@@ -93,3 +93,10 @@ func (suite *ParserTestSuite) Test_checkDiagnostics_MixOfErrors() {
 	parsedDiags := checkDiagnostics(diags, allowedErrors)
 	suite.Equalf(expectedDiags, parsedDiags, "Diagnostics should be %v", expectedDiags)
 }
+
+func (suite *ParserTestSuite) Test_LoadFile_WontParse() {
+	filePath := path.Join(suite.fixtureDirectory, fixtureFileHclWontParse)
+	rawHcl, parseErr := loadFile(filePath)
+	suite.Nilf(rawHcl, "Raw HCL should be nil")
+	suite.NotNilf(parseErr, "Parse error should not be nil")
+}
