@@ -15,9 +15,10 @@
 package parser
 
 import (
-	"fmt"
 	"os"
 	"strings"
+
+	"github.com/hashicorp/hcl/v2/gohcl"
 
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 
@@ -29,6 +30,8 @@ const (
 	DiagIgnoreUnsupportedBlock = "unsupported block"
 	// DiagIgnoreUnsupportedAttribute collects the error message given when an unknown attribute is scanned
 	DiagIgnoreUnsupportedAttribute = "unsupported attribute"
+	// DiagIgnoreUnsupportedArgument collects the error message given when an unknown argument is scanned
+	DiagIgnoreUnsupportedArgument = "unsupported argument"
 )
 
 var (
@@ -45,26 +48,29 @@ var (
 			},
 		},
 	}
-	//// variableBlockSchema grabs only the attributes we're interested in from the variable block
-	//variableBlockSchema = &hcl.BodySchema{
-	//	Attributes: []hcl.AttributeSchema{
-	//		{
-	//			Name: "default",
-	//		},
-	//	},
-	//}
+	// variableBlockSchema grabs only the attributes we're interested in from the variable block
+	variableBlockSchema = &hcl.BodySchema{
+		Attributes: []hcl.AttributeSchema{
+			//{
+			//	Name: "type",
+			//},
+			{
+				Name: "default",
+			},
+		},
+	}
 )
 
 // Variable holds values that may be used for Terragrunt inputs
 type Variable struct {
 	Name    string
-	Default interface{}
+	Default string
 }
 
 // Output holds values that may be used for Terragrunt dependencies
 type Output struct {
 	Name  string
-	Value interface{}
+	Value string
 }
 
 // Terraform holds the blocks from TF files we're interested in working with
@@ -120,9 +126,24 @@ func processSchema(rawHcl *hcl.File, schema *hcl.BodySchema) (*hcl.BodyContent, 
 	return blocks, nil
 }
 
-func processVariables(body *hcl.BodyContent) (variables []*Variable, diagErrors hcl.Diagnostics) {
-	for _, block := range body.Blocks {
-		fmt.Printf("%+v\n", block)
+func processVariable(block *hcl.Block) (variable *Variable, diagErr hcl.Diagnostics) {
+	if "variable" != block.Type {
+		return nil, nil
 	}
-	return nil, nil
+	blockContent, diags := block.Body.Content(variableBlockSchema)
+	diagErr = checkDiagnostics(diags, []string{DiagIgnoreUnsupportedAttribute, DiagIgnoreUnsupportedArgument})
+	if nil != diagErr {
+		return nil, diagErr
+	}
+	variable = &Variable{
+		Name: block.Labels[0],
+	}
+	if defaultAttr, ok := blockContent.Attributes["default"]; ok {
+		attributeDiags := gohcl.DecodeExpression(defaultAttr.Expr, nil, &variable.Default)
+		diagErr = checkDiagnostics(attributeDiags, nil)
+		if nil != attributeDiags {
+			return nil, diagErr
+		}
+	}
+	return variable, nil
 }
