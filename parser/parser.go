@@ -203,3 +203,17 @@ func processTerraform(body *hcl.BodyContent) (terraform Terraform, diagErrs hcl.
 	}
 	return terraform, diagErrs
 }
+
+func processFile(filePath string) (Terraform, error) {
+	terraform := Terraform{}
+	rawHcl, err := loadFile(filePath)
+	if nil != err {
+		return terraform, err
+	}
+	body, diagErrs := processSchema(rawHcl, importantBlocksSchema)
+	if nil != diagErrs {
+		return terraform, diagErrs
+	}
+	terraform, diagErrs = processTerraform(body)
+	return terraform, diagErrs
+}
