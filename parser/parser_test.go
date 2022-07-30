@@ -107,6 +107,27 @@ func (suite *ParserTestSuite) Test_checkDiagnostics_MixOfErrors() {
 	suite.Equalf(expectedDiags, parsedDiags, "Diagnostics should be %v", expectedDiags)
 }
 
+func (suite *ParserTestSuite) Test_checkDiagnostics_MultipleAllowedErrors() {
+	diags := hcl.Diagnostics{
+		{
+			Severity: hcl.DiagError,
+			Summary:  "Allowed diagnostic one",
+			Detail:   "This is allowed",
+		},
+		{
+			Severity: hcl.DiagError,
+			Summary:  "Allowed diagnostic two",
+			Detail:   "This is allowed",
+		},
+	}
+	allowedErrors := []string{
+		"Allowed diagnostic one",
+		"Allowed diagnostic two",
+	}
+	parsedDiags := checkDiagnostics(diags, allowedErrors)
+	suite.Nilf(parsedDiags, "Diagnostics should be nil")
+}
+
 func (suite *ParserTestSuite) Test_loadFile_WontParse() {
 	filePath := path.Join(suite.fixtureDirectory, fixtureFileHclWontParse)
 	rawHcl, parseErr := loadFile(filePath)
@@ -149,10 +170,10 @@ func (suite *ParserTestSuite) Test_processSchema_SchemaWithoutErrors() {
 	suite.Nilf(diags, "Diagnostics should be nil")
 }
 
-func (suite *ParserTestSuite) Test_processVariables_OnlyVariables() {
-	rawHcl, _ := loadFile(path.Join(suite.terraformFixtureDirectory, fixtureFileTerraformOnlyVariables))
-	body, _ := processSchema(rawHcl, importantBlocksSchema)
-	variables, diags := processVariables(body)
-	suite.NotNilf(variables, "Variables should not be nil")
-	suite.Nilf(diags, "Diagnostics should be nil")
-}
+//func (suite *ParserTestSuite) Test_processVariables_OnlyVariables() {
+//	rawHcl, _ := loadFile(path.Join(suite.terraformFixtureDirectory, fixtureFileTerraformOnlyVariables))
+//	body, _ := processSchema(rawHcl, importantBlocksSchema)
+//	variables, diags := processVariables(body)
+//	suite.NotNilf(variables, "Variables should not be nil")
+//	suite.Nilf(diags, "Diagnostics should be nil")
+//}

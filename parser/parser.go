@@ -82,10 +82,15 @@ func checkDiagnostics(diags hcl.Diagnostics, allowedErrors []string) (diagErrors
 	}
 	if diags.HasErrors() {
 		for _, diag := range diags {
+			ignored := false
 			for _, allowedError := range allowedErrors {
-				if !strings.Contains(strings.ToLower(diag.Error()), strings.ToLower(allowedError)) {
-					diagErrors = append(diagErrors, diag)
+				if strings.Contains(strings.ToLower(diag.Error()), strings.ToLower(allowedError)) {
+					ignored = true
+					break
 				}
+			}
+			if !ignored {
+				diagErrors = append(diagErrors, diag)
 			}
 		}
 	}
